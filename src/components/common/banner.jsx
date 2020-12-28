@@ -3,7 +3,7 @@ import "../../css/banner.css";
 import { keyframes } from "styled-components";
 import { useStateValue } from "./stateProvider";
 import { useHistory } from "react-router-dom";
-import {db} from "../firebase"
+import { db } from "../firebase";
 
 const Banner = ({ data }) => {
   const history = useHistory();
@@ -25,13 +25,14 @@ const Banner = ({ data }) => {
             id: data.id,
             title: data.name,
             cover: `https://${data?.cover.url}`.replace("thumb", "720p"),
-            company: data.involved_companies[0].company.name,
-            date: data.release_dates[0].human,
-            popularity: data.popularity,
+            company: data.involved_companies
+              ? data.involved_companies[0].company.name
+              : "N/A",
+            date: data.release_dates ? data.release_dates[0].human : "N/A",
+            // popularity: data.popularity,
           },
           user: user.email,
         });
-
       } else {
         dispatch({
           // Remove item from favoriteGames...
@@ -40,7 +41,6 @@ const Banner = ({ data }) => {
           id: data.id,
           user: user.email,
         });
-
       }
     } else {
       return history.push("/login");

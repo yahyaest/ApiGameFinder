@@ -32,7 +32,7 @@ const Table = () => {
     {
       label: "Cover",
       renderCover: (item) => {
-        let url = "https://" + item.cover.url;
+        let url = "https://" + item.cover?.url;
         url = url.replace("thumb", "cover_small");
         return <img src={url} alt={item.name} />;
       },
@@ -56,7 +56,7 @@ const Table = () => {
     {
       label: "Company",
       nested_path: (item) => {
-        const companies_length = item.involved_companies.length;
+        const companies_length = item.involved_companies?.length;
         return `involved_companies[${companies_length - 1}].company.name`;
       },
     },
@@ -71,7 +71,7 @@ const Table = () => {
   function getPageData() {
     // Pginate //
     const gamesList = paginate(games, currentPage, pageSize)
-    return { totalCount: games.length, data: gamesList };
+    return { totalCount: games?.length, data: gamesList };
   }
 
   //console.log(games);

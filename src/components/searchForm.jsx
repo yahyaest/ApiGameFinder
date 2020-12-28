@@ -88,7 +88,7 @@ const SearchForm = (props) => {
     // 3.Pginate //
     const gamesList = paginate(games, currentPage, pageSize);
 
-    return { totalCount: games.length, data: gamesList };
+    return { totalCount: games?.length, data: gamesList };
   }
 
   //console.log(games);
