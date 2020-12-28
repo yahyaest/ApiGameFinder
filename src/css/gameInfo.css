@@ -1,0 +1,56 @@
+.container {
+}
+
+.container h1 {
+  color: yellow;
+  margin-bottom: 1rem;
+}
+
+.cover {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  width: 50%;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  transition: all 0.5s;
+}
+
+.cover:hover {
+  transform: scale(1.05);
+}
+
+.sceenshots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.sceenshots img {
+  padding: 1rem;
+  transition: all 0.5s;
+}
+
+.sceenshots img:hover {
+  transform: scale(1.1);
+}
+
+@media (min-width: 360px) and (max-width: 800px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  h5 {
+    font-size: 1em;
+  }
+
+  p {
+    font-size: 0.75em;
+    padding: 5px;
+  }
+
+  .sceenshots img {
+width: 80%;
+  }
+
+}

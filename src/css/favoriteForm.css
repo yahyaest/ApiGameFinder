@@ -1,0 +1,20 @@
+.favorite__page{
+ width: 70%;
+ margin: auto;
+ margin-top: 100px;
+}
+
+.favorite__page > h1{
+ margin-bottom: 50px;
+ color: goldenrod;
+}
+
+.favorite__message > h3{
+ margin-bottom: 30px;
+
+}
+
+.favorite__message > p{
+
+}
+

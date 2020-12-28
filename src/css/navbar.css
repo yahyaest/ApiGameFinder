@@ -1,0 +1,158 @@
+.navBar {
+  display: flex;
+  justify-content: space-evenly;
+
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 20px;
+  height: 70px;
+  z-index: 1;
+
+  /* Animation */
+  transition-timing-function: ease-in;
+  transition: all 1s;
+}
+
+.navLogo {
+  position: fixed;
+  left: 20px;
+  width: 80px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.nav_color {
+  background-color: goldenrod;
+}
+
+.navList {
+  width: 40%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.navList li {
+  list-style: none;
+}
+
+.navBar a {
+  color: white;
+}
+
+.navBar a:hover {
+  color: crimson;
+  text-decoration: none;
+}
+
+.fav__number {
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+.login__option {
+  display: flex;
+  flex-direction: column;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.login__optionLineOne {
+  font-size: 10px;
+}
+
+.login__optionLineTwo {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.login__optionLineOne:hover {
+  color: crimson;
+}
+
+.login__optionLineTwo:hover {
+  color: crimson;
+}
+
+.burger {
+  display: none;
+  cursor: pointer;
+}
+
+.burger div {
+  width: 25px;
+  height: 3px;
+  background: white;
+  margin: 5px;
+  transition: all 0.3s ease;
+}
+
+@media (min-width: 360px) and (max-width: 800px) {
+  .navBar a {
+    font-size: 0.75em;
+  }
+
+  .navList {
+    position: absolute;
+    left: 0;
+    height: 92vh;
+    width: 50%;
+    top: 75px;
+    padding: 0;
+    z-index: 100;
+    background: crimson;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+
+    transform: translateX(-100%);
+    transition: transform 0.5s ease-in;
+  }
+
+  .navList li {
+    background: goldenrod;
+    border-bottom: 1px solid black;
+    width: 100%;
+    height: 75px;
+    text-align: center;
+    padding: 20px 0;
+  }
+
+  .navList li:hover {
+    background: darkgoldenrod;
+  }
+
+  .navList li a {
+    font-size: 1rem;
+  }
+
+  .navLogo {
+    position: relative;
+  }
+
+  .burger {
+    display: block;
+    position: fixed;
+    left: 10px;
+  }
+
+  .page-item.active .page-link {
+    z-index: 0 !important;
+  }
+}
+
+.nav-active {
+  transform: translateX(0%);
+}
+
+.toggle .line1 {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.toggle .line2 {
+  opacity: 0;
+}
+
+.toggle .line3 {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
