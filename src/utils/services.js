@@ -31,7 +31,7 @@ export function gameData() {
       })
       .catch((err) => {
         console.log(err);
-        window.location.replace("/enable-cros");
+        window.location.replace("/enable-cors");
       });
 
   return games;
@@ -64,7 +64,7 @@ export function gameSearch(game) {
     })
     .catch((err) => {
       console.log(err);
-      window.location.replace("/enable-cros");
+      window.location.replace("/enable-cors");
     });
 
   return searchResult;
