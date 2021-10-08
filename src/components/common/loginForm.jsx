@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, Link } from "react-router-dom";
-import { db, auth } from "../firebase";
+import { db, auth } from "../../utils/firebase";
 import { useStateValue } from "./stateProvider";
 import "../../css/loginForm.css";
 
@@ -13,12 +13,17 @@ function LoginForm() {
   const [userGames, setUserGames] = useState("");
 
   useEffect(() => {
+  
     dispatch({
       // Add item to list...
       type: "SET_LIST",
       item: userGames,
     });
   }, [userGames]);
+
+    if (user) {
+      history.push("/");
+    }
 
   const login = (event) => {
     event.preventDefault(); // Stop the refresh

@@ -2,6 +2,7 @@
   "name": "video_game_app",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3000",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -10,6 +11,7 @@
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
+    "cors-anywhere": "^0.4.4",
     "firebase": "^7.18.0",
     "font-awesome": "^4.7.0",
     "igdb-api-node": "^5.0.0",

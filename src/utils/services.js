@@ -3,7 +3,7 @@ const config = {
   headers: {
     "Content-Type": "application/json",
     "Client-ID": "71vq0git2hubkomm7jm6cyyjs4r603",
-    Authorization: "Bearer urc3ic60cl9z4tccdtkvlwsqlotte3",
+    Authorization: "Bearer 7b4qg78nwktds60wjy3trwz2co8q4p",
     Accept: "*/*",
   },
 };
@@ -21,7 +21,7 @@ export function gameData() {
       headers: {
         "Content-Type": "application/json",
         "Client-ID": "71vq0git2hubkomm7jm6cyyjs4r603",
-        Authorization: "Bearer urc3ic60cl9z4tccdtkvlwsqlotte3",
+        Authorization: "Bearer qyt3kot35r129qqp739be164ew28o7",
         Accept: "*/*",
       },
     })
@@ -29,7 +29,10 @@ export function gameData() {
         console.log(res.data);
         return res.data;
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        window.location.replace("/enable-cros");
+      });
 
   return games;
 }
@@ -45,7 +48,7 @@ export function gameSearch(game) {
       headers: {
         "Content-Type": "application/json",
         "Client-ID": "71vq0git2hubkomm7jm6cyyjs4r603",
-        Authorization: "Bearer urc3ic60cl9z4tccdtkvlwsqlotte3",
+        Authorization: "Bearer qyt3kot35r129qqp739be164ew28o7",
         Accept: "*/*",
       },
 
@@ -59,7 +62,10 @@ export function gameSearch(game) {
     .then((res) => {
       return res.data;
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      window.location.replace("/enable-cros");
+    });
 
   return searchResult;
 }

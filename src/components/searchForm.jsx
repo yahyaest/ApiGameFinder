@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { gameSearch } from "../services";
+import { gameSearch } from "../utils/services";
 import { Link } from "react-router-dom";
 import TableForm from "./common/tableForm";
 import Pagination from "./common/pagination";
 import { paginate } from "./../utils/paginate";
+import { GameList } from "../gameList";
 import "../css/searchForm.css";
 
 const SearchForm = (props) => {
   const [games, setGames] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchSuggestions, setSearchSuggestions] = useState([]);
   const [tableVisible, setTableVisible] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -22,23 +25,28 @@ const SearchForm = (props) => {
       if (!searchedGame) setTableVisible(false);
 
       const searchResult = await gameSearch(searchedGame);
-      console.log(searchResult);
       setGames(searchResult);
     }
     fetchData();
   }, [props.match.url]);
 
+  const FetchGameSuggestions = async (query) => {
+    //// using api :limited to 50 call by hour
+    // const searchResult = await gameSearch(query);
+    // setSearchSuggestions(searchResult.slice(0, 10));
+    //// using local file
+    const searchResult = GameList.filter((game) => game.toLowerCase().includes(query.toLowerCase()));
+    setSearchSuggestions(searchResult.slice(0, 10));
+  };
+
   const FetchGameSearch = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const searchInput = document.getElementById("search").value;
-    console.log(props.match.url, "haha", searchInput);
     const searchResult = await gameSearch(searchInput);
-    console.log(searchResult);
     setGames(searchResult);
     setTableVisible(true);
     props.history.push(`/search/${searchInput}`);
   };
-
 
   let columns = [
     {
@@ -98,25 +106,50 @@ const SearchForm = (props) => {
     <div className="search">
       <h1 style={{ color: "gold" }}>Search</h1>
 
-      <form >
-        <div className="form-group row">
-          <label htmlFor="search">Enter game name</label>
-          <input
-            name="search"
-            type="search"
-            className="form-control"
-            id="search"
-            placeholder="Enter game name . . ."
-          ></input>
+      <div className="search-form">
+        <form>
+          <div className="form-group row">
+            <label htmlFor="search">Enter game name</label>
+            <input
+              name="search"
+              type="search"
+              className="form-control"
+              id="search"
+              placeholder="Enter game name . . ."
+              onChange={(e) => {
+                setSearchQuery(e.currentTarget.value);
+                FetchGameSuggestions(e.currentTarget.value);
+              }}
+            ></input>
+          </div>
+          <button
+            type="submit"
+            className="btn btn-warning"
+            onClick={(e) => FetchGameSearch(e)}
+          >
+            Search
+          </button>
+        </form>
+
+        <div className="search-suggestions">
+          {searchQuery && (
+            <div className="suggestion-header">Suggestions..</div>
+          )}
+          {searchSuggestions &&
+            searchQuery &&
+            searchSuggestions?.map((element) => (
+              <div
+                className="search-suggestion"
+                onClick={() => {
+                  document.getElementById("search").value = element;
+                  setSearchQuery("");
+                }}
+              >
+                {element}
+              </div>
+            ))}
         </div>
-      <button
-        type="submit"
-        className="btn btn-warning"
-        onClick={(e) => FetchGameSearch(e)}
-      >
-        Search
-      </button>
-      </form>
+      </div>
 
       <br />
       <br />

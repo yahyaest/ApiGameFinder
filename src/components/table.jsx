@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { gameData } from "../services";
+import { gameData } from "../utils/services";
 import TableForm from "./common/tableForm";
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
@@ -34,7 +34,7 @@ const Table = () => {
       renderCover: (item) => {
         let url = "https://" + item.cover?.url;
         url = url.replace("thumb", "cover_small");
-        return <img src={url} alt={item.name} />;
+        return <img src={url} alt={item.name}  />;
       },
     },
     {

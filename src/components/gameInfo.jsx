@@ -23,7 +23,7 @@ const GameInfo = ({ data }) => {
               <img
                 key={screenshot.id}
                 src={`https://${screenshot.url}`.replace("thumb", "logo_med")}
-                alt={data.name}
+              alt={data.name}
               ></img>
             ))
           : ""}

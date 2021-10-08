@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useStateValue } from "./components/common/stateProvider";
-import { db, auth } from "./components/firebase";
+import { db, auth } from "./utils/firebase";
 import Table from "./components/table";
 import GameForm from "./components/gameForm";
 import SearchForm from "./components/searchForm";
@@ -9,6 +9,7 @@ import Navbar from "./components/common/navbar";
 import FavoriteForm from "./components/favoriteForm";
 import LoginForm from "./components/common/loginForm";
 import RegisterForm from "./components/common/registerForm";
+import CrosPage from './components/crosPage';
 import "./App.css";
 
 function App() {
@@ -129,8 +130,9 @@ function App() {
         <Route path="/favorites" component={FavoriteForm} />
         <Route path="/login" component={LoginForm} />
         <Route path="/register" component={RegisterForm} />
+        <Route path="/enable-cros" component={CrosPage} />
 
-        <Redirect from="/" exact to="/login" />
+        <Redirect from="/" exact to="/games" />
       </Switch>
     </div>
   );

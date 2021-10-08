@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
-import { db, auth } from "../firebase";
+import { db, auth } from "../../utils/firebase";
 import "../../css/registerForm.css";
 
 function RegisterForm() {

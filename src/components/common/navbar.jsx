@@ -3,7 +3,7 @@ import "../../css/navbar.css";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import { NavLink, Link } from "react-router-dom";
 import { useStateValue } from "./stateProvider";
-import { auth } from "../firebase";
+import { auth } from "../../utils/firebase";
 
 const Navbar = () => {
   const [{ favoriteGames, user }] = useStateValue();
@@ -65,7 +65,7 @@ const Navbar = () => {
       <Link to="/">
         <img
           className="navLogo"
-          src="https://www.gamestop.ie/Views/Locale/promoPages/LandingPages/E3/images/logo.png"
+          src="/images/E3_Logo.png"
           alt="E3-Logo"
         />
       </Link>
@@ -93,7 +93,7 @@ const Navbar = () => {
       </ul>
 
       <div className="fav__games">
-        <NavLink to={user ? "/favorites" : "/"}>
+        <NavLink to={user ? "/favorites" : "/login"}>
           <SportsEsportsIcon />
         </NavLink>
         <span className="fav__number">{user ? favoriteGames.length : 0}</span>

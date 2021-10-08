@@ -1,0 +1,36 @@
+.search-suggestions {
+  z-index: 999;
+  background-color: crimson;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
+.search-suggestion {
+  cursor: pointer;
+  padding: 2px 10px;
+}
+
+.search-suggestion:hover {
+  background-color: goldenrod;
+  color: black;
+}
+
+.suggestion-header {
+  background-color: orangered;
+  padding: 2px 10px;
+}
+
+.skeleton{
+  animation: skeleton-loading 1s linear  infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0%{
+    background-color: hsl(200,20%,70%);
+  }
+
+    100%{
+    background-color: hsl(200,20%,95%);
+  }
+  
+}
