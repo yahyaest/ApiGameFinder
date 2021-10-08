@@ -9,7 +9,7 @@ import Navbar from "./components/common/navbar";
 import FavoriteForm from "./components/favoriteForm";
 import LoginForm from "./components/common/loginForm";
 import RegisterForm from "./components/common/registerForm";
-import CrosPage from './components/crosPage';
+import CorsPage from './components/corsPage';
 import "./App.css";
 
 function App() {
@@ -130,7 +130,7 @@ function App() {
         <Route path="/favorites" component={FavoriteForm} />
         <Route path="/login" component={LoginForm} />
         <Route path="/register" component={RegisterForm} />
-        <Route path="/enable-cros" component={CrosPage} />
+        <Route path="/enable-cors" component={CorsPage} />
 
         <Redirect from="/" exact to="/games" />
       </Switch>
