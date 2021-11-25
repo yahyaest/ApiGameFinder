@@ -21,7 +21,7 @@ export function gameData() {
       headers: {
         "Content-Type": "application/json",
         "Client-ID": "71vq0git2hubkomm7jm6cyyjs4r603",
-        Authorization: "Bearer qyt3kot35r129qqp739be164ew28o7",
+        Authorization: "Bearer 5aw6d2hpi9bmml05rwp7388vzu6k6e",
         Accept: "*/*",
       },
     })
@@ -48,7 +48,7 @@ export function gameSearch(game) {
       headers: {
         "Content-Type": "application/json",
         "Client-ID": "71vq0git2hubkomm7jm6cyyjs4r603",
-        Authorization: "Bearer qyt3kot35r129qqp739be164ew28o7",
+        Authorization: "Bearer 5aw6d2hpi9bmml05rwp7388vzu6k6e",
         Accept: "*/*",
       },
 
