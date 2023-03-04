@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import StoreContext from "../store/store-context";
 import { gameSearch } from "../utils/services";
 import { Link } from "react-router-dom";
 import TableForm from "./common/tableForm";
@@ -8,6 +9,8 @@ import { GameList } from "../gameList";
 import "../css/searchForm.css";
 
 const SearchForm = (props) => {
+  const storeCtx = useContext(StoreContext);
+
   const [games, setGames] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchSuggestions, setSearchSuggestions] = useState([]);
@@ -19,12 +22,15 @@ const SearchForm = (props) => {
 
   useEffect(() => {
     async function fetchData() {
+      const token = await storeCtx.accessTwitchToken;
+      console.log("myToken : ", token);
+
       let searchedGame = props.match.url.slice(8);
       console.log(searchedGame);
       document.getElementById("search").value = searchedGame;
       if (!searchedGame) setTableVisible(false);
 
-      const searchResult = await gameSearch(searchedGame);
+      const searchResult = await gameSearch(searchedGame, token);
       setGames(searchResult);
     }
     fetchData();
@@ -35,14 +41,17 @@ const SearchForm = (props) => {
     // const searchResult = await gameSearch(query);
     // setSearchSuggestions(searchResult.slice(0, 10));
     //// using local file
-    const searchResult = GameList.filter((game) => game.toLowerCase().includes(query.toLowerCase()));
+    const searchResult = GameList.filter((game) =>
+      game.toLowerCase().includes(query.toLowerCase())
+    );
     setSearchSuggestions(searchResult.slice(0, 10));
   };
 
   const FetchGameSearch = async (e) => {
     e.preventDefault();
+    const token = await storeCtx.accessTwitchToken;
     const searchInput = document.getElementById("search").value;
-    const searchResult = await gameSearch(searchInput);
+    const searchResult = await gameSearch(searchInput, token);
     setGames(searchResult);
     setTableVisible(true);
     props.history.push(`/search/${searchInput}`);
@@ -125,7 +134,11 @@ const SearchForm = (props) => {
           <button
             type="submit"
             className="btn btn-warning"
-            onClick={(e) => FetchGameSearch(e)}
+            onClick={(e) => {
+              FetchGameSearch(e);
+              setSearchSuggestions([]);
+              setSearchQuery("");
+            }}
           >
             Search
           </button>

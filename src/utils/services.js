@@ -1,54 +1,61 @@
 import axios from "axios";
-const config = {
-  headers: {
-    "Content-Type": "application/json",
-    "Client-ID": "71vq0git2hubkomm7jm6cyyjs4r603",
-    Authorization: "Bearer 7b4qg78nwktds60wjy3trwz2co8q4p",
-    Accept: "*/*",
-  },
-};
 
-export function gameData() {
+export async function refreshToken() {
+  const url = `https://id.twitch.tv/oauth2/token?client_id=${process.env.REACT_APP_CLIENT_ID}&client_secret=${process.env.REACT_APP_CLIENT_SECRET}&grant_type=client_credentials`;
+  try {
+    const refreshToken = await axios.post(url, {});
+    const accessToken = refreshToken.data.access_token;
+    // console.log("accessToken : ", accessToken);
+    // config.headers.Authorization = `Bearer ${accessToken}`;
+    return accessToken;
+  } catch (error) {
+    if (error.response) {
+      console.log(error.response.status);
+      console.log(error.response.data);
+    }
+  }
+}
+
+export async function gameData(token) {
   const proxyurl = "https://cors-anywhere.herokuapp.com/";
   const url =
     "https://api.igdb.com/v4/games/?fields=name,rating,genres.name,cover.url,screenshots.url,artworks.url,franchises.name,involved_companies.company.name,release_dates.human,websites.url,storyline,summary,url&order=rating:desc&where=rating:!=null&limit=50";
-  const games =
-    // axios
-    // .post(proxyurl + url, config)
-    axios({
+
+  try {
+    const games = await axios({
       url: proxyurl + url,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Client-ID": "71vq0git2hubkomm7jm6cyyjs4r603",
-        Authorization: "Bearer 5aw6d2hpi9bmml05rwp7388vzu6k6e",
+        "Client-ID": process.env.REACT_APP_CLIENT_ID,
+        Authorization: `Bearer ${token}`,
         Accept: "*/*",
       },
-    })
-      .then((res) => {
-        console.log(res.data);
-        return res.data;
-      })
-      .catch((err) => {
-        console.log(err);
-        window.location.replace("/enable-cors");
-      });
-
-  return games;
+    });
+    const results = games.data;
+    console.log(results);
+    return results;
+  } catch (error) {
+    if (error.response) {
+      const errorCodeStatus = error.response.status;
+      console.log("Error Code Status : ", errorCodeStatus);
+      console.log("Error Code Message : ", error.response.data);
+    }
+    window.location.replace("/enable-cors");
+  }
 }
 
-export function gameSearch(game) {
+export async function gameSearch(game, token) {
   const proxyurl = "https://cors-anywhere.herokuapp.com/";
   const url = "https://api.igdb.com/v4/games/";
 
   console.log(game);
-
-  const searchResult = axios
-    .get(proxyurl + url, {
+  try {
+    const searchResult = await axios.get(proxyurl + url, {
       headers: {
         "Content-Type": "application/json",
-        "Client-ID": "71vq0git2hubkomm7jm6cyyjs4r603",
-        Authorization: "Bearer 5aw6d2hpi9bmml05rwp7388vzu6k6e",
+        "Client-ID": process.env.REACT_APP_CLIENT_ID,
+        Authorization: `Bearer ${token}`,
         Accept: "*/*",
       },
 
@@ -58,14 +65,16 @@ export function gameSearch(game) {
           "name,genres.name,rating,cover.url,screenshots.url,artworks.url,franchises.name,involved_companies.company.name,release_dates.human,websites.url,storyline,summary,url",
         limit: 50,
       },
-    })
-    .then((res) => {
-      return res.data;
-    })
-    .catch((err) => {
-      console.log(err);
-      window.location.replace("/enable-cors");
     });
-
-  return searchResult;
+    const results = searchResult.data;
+    console.log(results);
+    return results;
+  } catch (error) {
+    if (error.response) {
+      const errorCodeStatus = error.response.status;
+      console.log("Error Code Status : ", errorCodeStatus);
+      console.log("Error Code Message : ", error.response.data);
+    }
+    window.location.replace("/enable-cors");
+  }
 }

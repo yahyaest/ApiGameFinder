@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { gameData } from "../utils/services";
 import TableForm from "./common/tableForm";
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 import { Link } from "react-router-dom";
+import StoreContext from "../store/store-context"
 
 const Table = () => {
+  const storeCtx = useContext(StoreContext)
   const [games, setGames] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -14,7 +16,9 @@ const Table = () => {
 
   useEffect(() => {
     async function getData() {
-      const data = await gameData();
+      const token = await storeCtx.accessTwitchToken
+      console.log("myToken : ", token);
+      const data = await gameData(token);
       setGames(data);
 
       return data;

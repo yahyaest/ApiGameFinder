@@ -3,7 +3,6 @@ import "../../css/banner.css";
 import { keyframes } from "styled-components";
 import { useStateValue } from "./stateProvider";
 import { useHistory } from "react-router-dom";
-import { db } from "../../utils/firebase";
 
 const Banner = ({ data }) => {
   const history = useHistory();

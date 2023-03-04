@@ -7,3 +7,6 @@ response : {
 }
 
 put Bearer + access_token in Authorization in services.js file
+
+Docs : https://api-docs.igdb.com/#authentication
+

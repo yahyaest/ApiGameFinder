@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useStateValue } from "./components/common/stateProvider";
 import { db, auth } from "./utils/firebase";
+import { StoreContextProvider } from "./store/store-context";
 import Table from "./components/table";
 import GameForm from "./components/gameForm";
 import SearchForm from "./components/searchForm";
@@ -15,7 +16,7 @@ import "./App.css";
 function App() {
   const [{ favoriteGames, user, prevUser }, dispatch] = useStateValue();
   const currentUser = localStorage.getItem(`user${user?.email}`);
-
+  
   // Set user at login/logout
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
@@ -119,6 +120,7 @@ function App() {
   }, [favoriteGames]);
 
   return (
+    <StoreContextProvider>
     <div className="App">
       <Navbar />
       <Switch>
@@ -135,6 +137,7 @@ function App() {
         <Redirect from="/" exact to="/games" />
       </Switch>
     </div>
+    </StoreContextProvider>
   );
 }
 
