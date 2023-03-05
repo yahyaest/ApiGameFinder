@@ -16,6 +16,16 @@ const GameInfo = ({ data }) => {
       <p>{data?.storyline || data?.summary}</p>
       <h1>Release Date </h1>
       <h5>{data.release_dates ? data.release_dates[0].human : "Not Found"}</h5>
+      <h1>Genres</h1>
+      {data.genres.map((genre) => (
+        <h5> - {genre.name}</h5>
+      ))}
+      {data.rating && (
+        <>
+          <h1>Rating</h1>
+          <h5>{data.rating.toPrecision(4)} %</h5>
+        </>
+      )}
       <h1>Screenshots</h1>
       <div className="sceenshots">
         {data.screenshots
@@ -23,7 +33,7 @@ const GameInfo = ({ data }) => {
               <img
                 key={screenshot.id}
                 src={`https://${screenshot.url}`.replace("thumb", "logo_med")}
-              alt={data.name}
+                alt={data.name}
               ></img>
             ))
           : ""}

@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
-import "../../css/banner.css";
 import { keyframes } from "styled-components";
 import { useStateValue } from "./stateProvider";
 import { useHistory } from "react-router-dom";
+import ModalVideo from "react-modal-video";
+import "react-modal-video/css/modal-video.min.css";
+import "../../css/banner.css";
+import { searchVideo } from "../../utils/services.js";
 
 const Banner = ({ data }) => {
   const history = useHistory();
   const [{ favoriteGames, user }, dispatch] = useStateValue();
 
+  const [videoId, setVideoId] = useState("");
+  const [isTrailerOpen, setTrailerOpen] = useState(false);
   const [toggle, setToggle] = useState(true);
 
   useEffect(() => {
@@ -161,11 +166,34 @@ const Banner = ({ data }) => {
             </button>
           )}
 
+          <button
+            className="banner-button"
+            onClick={async () => {
+              const videoTrailer = await searchVideo(data.name);
+              setVideoId(videoTrailer);
+              setTrailerOpen(true);
+            }}
+            rel="noopener noreferrer"
+          >
+            Watch Trailer
+          </button>
+
           <h1 className="banner-summary">{truncate(data.summary, 250)}</h1>
         </div>
 
         <div className="banner--fadeBottom" />
       </header>
+      {videoId && (
+        <div>
+          <ModalVideo
+            channel="youtube"
+            autoplay
+            isOpen={isTrailerOpen}
+            videoId={videoId}
+            onClose={() => setTrailerOpen(false)}
+          />
+        </div>
+      )}
     </React.Fragment>
   );
 };
