@@ -4,22 +4,28 @@ import TableForm from "./common/tableForm";
 import Pagination from "./common/pagination";
 import { paginate } from "../utils/paginate";
 import { Link } from "react-router-dom";
-import StoreContext from "../store/store-context"
+import StoreContext from "../store/store-context";
+import { getApiReserveToken } from "../utils/utils";
 
 const Table = () => {
-  const storeCtx = useContext(StoreContext)
+  const storeCtx = useContext(StoreContext);
   const [games, setGames] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [spinnerVisible, setSpinnerVisible] = useState(true);
 
   const pageSize = 10;
   let index = 1;
 
   useEffect(() => {
     async function getData() {
-      const token = await storeCtx.accessTwitchToken
-      console.log("myToken : ", token);
+      let token = await storeCtx.accessTwitchToken;
+      if (!token) {
+        const user = localStorage.getItem(`user`);
+        token = await getApiReserveToken(user);
+      }
       const data = await gameData(token);
       setGames(data);
+      setSpinnerVisible(false);
 
       return data;
     }
@@ -38,7 +44,7 @@ const Table = () => {
       renderCover: (item) => {
         let url = "https://" + item.cover?.url;
         url = url.replace("thumb", "cover_small");
-        return <img src={url} alt={item.name}  />;
+        return <img src={url} alt={item.name} />;
       },
     },
     {
@@ -46,9 +52,6 @@ const Table = () => {
       label: "Name",
       content: (item) => {
         localStorage.setItem(`${item.id}`, JSON.stringify(item));
-        //// state: { data: item } is used topass data to link
-        //// but in this case its uneffective in persisting the data when openining the link in a new tab
-        //// so localStorage is the solution
         return (
           <Link to={{ pathname: `/games/${item.id}`, state: { data: item } }}>
             {item.name}
@@ -71,29 +74,32 @@ const Table = () => {
     setCurrentPage(page);
   }
 
-
   function getPageData() {
     // Pginate //
-    const gamesList = paginate(games, currentPage, pageSize)
+    const gamesList = paginate(games, currentPage, pageSize);
     return { totalCount: games?.length, data: gamesList };
   }
 
-  //console.log(games);
   const { totalCount, data: gamesList } = getPageData();
 
   return (
-    <div className="topGame">
-      <TableForm
-        items={gamesList}
-        columns={columns}
-      />
-      <Pagination
-        itemsCounts={totalCount}
-        pageSize={pageSize}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
-    </div>
+    <>
+      {spinnerVisible ? (
+        <div class="spinner-border text-danger center_spinner" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      ) : (
+        <div className="topGame">
+          <TableForm items={gamesList} columns={columns} />
+          <Pagination
+            itemsCounts={totalCount}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
+    </>
   );
 };
 

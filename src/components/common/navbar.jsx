@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../../css/navbar.css";
 import SportsEsportsIcon from "@material-ui/icons/SportsEsports";
 import { NavLink, Link } from "react-router-dom";
-import { useStateValue } from "./stateProvider";
 import { auth } from "../../utils/firebase";
+import StoreContext from "../../store/store-context";
 
 const Navbar = () => {
-  const [{ favoriteGames, user }] = useStateValue();
+  const storeCtx = useContext(StoreContext);
   const [show, handleShow] = useState(false);
-
+  const user = localStorage.getItem(`user`);
+  const favoriteGames = storeCtx.favoriteGames;
 
   useEffect(() => {
     window.addEventListener("scroll", () => {
@@ -18,17 +19,12 @@ const Navbar = () => {
         handleShow(false);
       }
     });
+
     return () => {
       window.removeEventListener("scroll");
     };
   }, []);
-
-  const login = () => {
-    if (user) {
-      auth.signOut();
-    }
-  };
-
+  
   useEffect(() => {
     const burger = document.querySelector(".burger");
     const nav = document.querySelector(".navList");
@@ -39,8 +35,8 @@ const Navbar = () => {
       nav.classList.toggle("nav-active");
       //Animate Links
       navLinks.forEach((link, index) => {
-        console.log(index);
-        console.log(index / 5 + 0.5);
+        // console.log(index);
+        // console.log(index / 5 + 0.5);
         if (link.style.animation) {
           link.style.animation = "";
         } else {
@@ -54,6 +50,14 @@ const Navbar = () => {
     });
   }, []);
 
+    const logout = () => {
+      if (user) {
+        auth.signOut();
+        localStorage.removeItem(`user`);
+        storeCtx.userLogout();
+      }
+    };
+
   return (
     <div className={`navBar ${show && "nav_color"}`}>
       <div className="burger">
@@ -63,16 +67,12 @@ const Navbar = () => {
       </div>
 
       <Link to="/">
-        <img
-          className="navLogo"
-          src="/images/E3_Logo.png"
-          alt="E3-Logo"
-        />
+        <img className="navLogo" src="/images/E3_Logo.png" alt="E3-Logo" />
       </Link>
 
       <NavLink to={!user && "/login"}>
-        <div onClick={login} className="login__option">
-          <span className="login__optionLineOne">Hello {user?.email}</span>
+        <div onClick={logout} className="login__option">
+          {user && <span className="login__optionLineOne">Hello {user}</span>}
           <span className="login__optionLineTwo">
             {user ? "Sign Out" : "Sign In"}
           </span>
@@ -96,7 +96,9 @@ const Navbar = () => {
         <NavLink to={user ? "/favorites" : "/login"}>
           <SportsEsportsIcon />
         </NavLink>
-        <span className="fav__number">{user ? favoriteGames.length : 0}</span>
+        <span className="fav__number">
+          {favoriteGames ? favoriteGames.length : 0}
+        </span>
       </div>
     </div>
   );

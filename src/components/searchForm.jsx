@@ -6,6 +6,7 @@ import TableForm from "./common/tableForm";
 import Pagination from "./common/pagination";
 import { paginate } from "./../utils/paginate";
 import { GameList } from "../gameList";
+import { getApiReserveToken } from "../utils/utils";
 import "../css/searchForm.css";
 
 const SearchForm = (props) => {
@@ -14,7 +15,8 @@ const SearchForm = (props) => {
   const [games, setGames] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchSuggestions, setSearchSuggestions] = useState([]);
-  const [tableVisible, setTableVisible] = useState(true);
+  const [tableVisible, setTableVisible] = useState(false);
+  const [spinnerVisible, setSpinnerVisible] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
   const pageSize = 10;
@@ -22,16 +24,23 @@ const SearchForm = (props) => {
 
   useEffect(() => {
     async function fetchData() {
-      const token = await storeCtx.accessTwitchToken;
-      console.log("myToken : ", token);
+      let token = await storeCtx.accessTwitchToken;
+      if (!token) {
+        const user = localStorage.getItem(`user`);
+        token = await getApiReserveToken(user);
+      }
 
       let searchedGame = props.match.url.slice(8);
-      console.log(searchedGame);
       document.getElementById("search").value = searchedGame;
+      setSpinnerVisible(false);
       if (!searchedGame) setTableVisible(false);
-
-      const searchResult = await gameSearch(searchedGame, token);
-      setGames(searchResult);
+      else {
+        // setSpinnerVisible(true);
+        const searchResult = await gameSearch(searchedGame, token);
+        // setSpinnerVisible(false);
+        setGames(searchResult);
+        setTableVisible(true);
+      }
     }
     fetchData();
   }, [props.match.url]);
@@ -54,6 +63,7 @@ const SearchForm = (props) => {
     const searchResult = await gameSearch(searchInput, token);
     setGames(searchResult);
     setTableVisible(true);
+    setSpinnerVisible(false);
     props.history.push(`/search/${searchInput}`);
   };
 
@@ -79,9 +89,6 @@ const SearchForm = (props) => {
       label: "Name",
       content: (item) => {
         localStorage.setItem(`${item.id}`, JSON.stringify(item));
-        //// state: { data: item } is used topass data to link
-        //// but in this case its uneffective in persisting the data when openining the link in a new tab
-        //// so localStorage is the solution
         return (
           <Link to={{ pathname: `/games/${item.id}`, state: { data: item } }}>
             {item.name}
@@ -108,7 +115,6 @@ const SearchForm = (props) => {
     return { totalCount: games?.length, data: gamesList };
   }
 
-  //console.log(games);
   const { totalCount, data: gamesList } = getPageData();
 
   return (
@@ -134,10 +140,13 @@ const SearchForm = (props) => {
           <button
             type="submit"
             className="btn btn-warning"
+            disabled={searchQuery ? false : true}
             onClick={(e) => {
               FetchGameSearch(e);
               setSearchSuggestions([]);
               setSearchQuery("");
+              setTableVisible(false);
+              setSpinnerVisible(true);
             }}
           >
             Search
@@ -145,9 +154,6 @@ const SearchForm = (props) => {
         </form>
 
         <div className="search-suggestions">
-          {searchQuery && (
-            <div className="suggestion-header">Suggestions..</div>
-          )}
           {searchSuggestions &&
             searchQuery &&
             searchSuggestions?.map((element) => (
@@ -155,7 +161,8 @@ const SearchForm = (props) => {
                 className="search-suggestion"
                 onClick={() => {
                   document.getElementById("search").value = element;
-                  setSearchQuery("");
+                  setSearchQuery(element);
+                  setSearchSuggestions([]);
                 }}
               >
                 {element}
@@ -167,14 +174,22 @@ const SearchForm = (props) => {
       <br />
       <br />
 
+      {spinnerVisible && (
+        <div class="spinner-border text-danger center_spinner" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      )}
+
       {tableVisible && <TableForm items={gamesList} columns={columns} />}
 
-      <Pagination
-        itemsCounts={totalCount}
-        pageSize={pageSize}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+      {tableVisible && (
+        <Pagination
+          itemsCounts={totalCount}
+          pageSize={pageSize}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
+      )}
     </div>
   );
 };

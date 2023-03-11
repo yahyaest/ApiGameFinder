@@ -1,71 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { useHistory, Link } from "react-router-dom";
-import { db, auth } from "../../utils/firebase";
-import { useStateValue } from "./stateProvider";
+import { auth } from "../../utils/firebase";
 import "../../css/loginForm.css";
+import StoreContext from "../../store/store-context";
 
 function LoginForm() {
   const history = useHistory();
-  const [{ favoriteGames, user }, dispatch] = useStateValue();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userGames, setUserGames] = useState("");
+  const storeCtx = useContext(StoreContext);
 
-  useEffect(() => {
-  
-    dispatch({
-      // Add item to list...
-      type: "SET_LIST",
-      item: userGames,
-    });
-  }, [userGames]);
+const user = localStorage.getItem(`user`, email);
+  if (user) {
+    // history.push("/");
+  }
 
-    if (user) {
-      history.push("/");
-    }
-
-  const login = (event) => {
+  const login = async (event) => {
     event.preventDefault(); // Stop the refresh
     // Do the logic
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then((auth) => {
-        // logged in, redirect to homepage...
-        history.push("/games");
-      })
-      .catch((e) => alert(e.message));
-
-    // Get user data from database
-    db.collection("users")
-      .doc(email)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          console.log(email, "data : ", doc.data());
-          setUserGames(doc.data().Games);
-          localStorage.setItem(
-            `userGames${email}`,
-            JSON.stringify(doc.data().Games)
-          );
-
-          localStorage.setItem(`user${email}`, email);
-
-          let one = JSON.parse(localStorage.getItem(`userGames${user.email}`));
-          console.log("lool", one);
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-        }
-      })
-      .catch((error) => {
-        console.log("Error getting document:", error);
-      });
+    try {
+      await auth.signInWithEmailAndPassword(email, password);
+      localStorage.setItem(`user`, email);
+      storeCtx.userLogin(email)
+      history.push("/games");
+    } catch (error) {
+      alert(error.message);
+    }
   };
+
   return (
     <div className="login">
       <h1>Sign in</h1>
-      <form action="" className="login__form">
+      <form onSubmit={login} action="" className="login__form">
         <label htmlFor="E-mail">E-mail :</label>
         <input
           type="email"
@@ -78,7 +44,7 @@ function LoginForm() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-        <button onClick={login} type="submit" className="login__signInButton">
+        <button type="submit" className="login__signInButton">
           Sign In
         </button>
         <p>

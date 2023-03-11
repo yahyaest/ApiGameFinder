@@ -8,7 +8,7 @@ const GameInfo = ({ data }) => {
         <img
           className="cover"
           src={`https://${data?.cover.url}`.replace("thumb", "720p")}
-          alt="data.name}"
+          alt={`${data.name}`}
         />
       )}
 
@@ -18,7 +18,7 @@ const GameInfo = ({ data }) => {
       <h5>{data.release_dates ? data.release_dates[0].human : "Not Found"}</h5>
       <h1>Genres</h1>
       {data.genres.map((genre) => (
-        <h5> - {genre.name}</h5>
+        <h5 key={genre.id}> - {genre.name}</h5>
       ))}
       {data.rating && (
         <>

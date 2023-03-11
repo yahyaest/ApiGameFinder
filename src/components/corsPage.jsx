@@ -19,7 +19,7 @@ function CorsPage() {
           className="register__button"
           style={{ width: "175px" }}
           onClick={() =>
-            window.location.replace("/")
+            window.location.replace("/games")
           }
         >
           Home Page

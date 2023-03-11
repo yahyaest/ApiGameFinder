@@ -8,22 +8,22 @@ function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const register = (event) => {
-    event.preventDefault(); // Stop the refresh
-    // Do the logic
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((auth) => {
-        // create a user and logged in, redirect to homepage...
-        history.push("/games");
-      })
-      .catch((e) => alert(e.message));
-
-    // Add to database
-    db.collection("users").doc(email).set({
-      Email: email,
-      Password: password,
-    });
+  const register = async (event) => {
+    // Stop the refresh
+    event.preventDefault();
+    try {
+      await auth.createUserWithEmailAndPassword(email, password);
+      // Add to database
+      db.collection("users").doc(email).set({
+        email,
+        games: [],
+        reserveIgbdToken: ""
+      });
+      localStorage.setItem(`user`, email);
+      history.push("/games");
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (

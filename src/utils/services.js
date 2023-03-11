@@ -33,7 +33,6 @@ export async function gameData(token) {
   try {
     const games = await axios.post(proxyurl + url, qery, headers);
     const results = games.data;
-    console.log(results);
     return results;
   } catch (error) {
     if (error.response) {

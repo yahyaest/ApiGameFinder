@@ -1,66 +1,59 @@
-import React, { useState, useEffect } from "react";
-import { keyframes } from "styled-components";
-import { useStateValue } from "./stateProvider";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import ModalVideo from "react-modal-video";
-import "react-modal-video/css/modal-video.min.css";
-import "../../css/banner.css";
+import StoreContext from "../../store/store-context";
 import { searchVideo } from "../../utils/services.js";
+import { getUserGames } from "../../utils/utils";
+import { keyframes } from "styled-components";
+import "../../css/banner.css";
+import "react-modal-video/css/modal-video.min.css";
 
 const Banner = ({ data }) => {
-  const history = useHistory();
-  const [{ favoriteGames, user }, dispatch] = useStateValue();
+  const user = localStorage.getItem(`user`);
 
+  const history = useHistory();
   const [videoId, setVideoId] = useState("");
   const [isTrailerOpen, setTrailerOpen] = useState(false);
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState(false);
+
+  const storeCtx = useContext(StoreContext);
+  const favoriteGames = storeCtx.favoriteGames;
 
   useEffect(() => {
-    renderFavButtonText();
-  });
+    async function fetchData() {
+      const userGames = await getUserGames(user);
+      renderFavButtonText(userGames);
+    }
+    fetchData();
+  }, []);
 
-  const addToFavorite = () => {
+  const handleFavButton = async () => {
     if (user) {
       if (!toggle) {
-        dispatch({
-          // Add item to list...
-          type: "ADD_TO_LIST",
-          item: {
-            id: data.id,
-            title: data.name,
-            cover: `https://${data?.cover.url}`.replace("thumb", "720p"),
-            company: data.involved_companies
-              ? data.involved_companies[0].company.name
-              : "N/A",
-            date: data.release_dates ? data.release_dates[0].human : "N/A",
-            // popularity: data.popularity,
-          },
-          user: user.email,
-        });
+        // Add to fav
+        const addGame = await storeCtx.addFavGame(user, favoriteGames, data);
+        addGame ? setToggle(true) : alert("Add game to favourite fails!");
       } else {
-        dispatch({
-          // Remove item from favoriteGames...
-
-          type: "REMOVE_FROM_LIST",
-          id: data.id,
-          user: user.email,
-        });
+        // Remove from fav
+        const removeGame = await storeCtx.deleteFavGame(
+          user,
+          favoriteGames,
+          data
+        );
+        removeGame
+          ? setToggle(false)
+          : alert("Remove game from favourite fails!");
       }
     } else {
       return history.push("/login");
     }
-    //localStorage.setItem(`userGames`, JSON.stringify(favoriteGames));
   };
 
-  const renderFavButtonText = () => {
+  const renderFavButtonText = (userGames) => {
     const ids = [];
-    favoriteGames
-      ? favoriteGames.map((game) => ids.push(game.id))
-      : setToggle(false);
-    //console.log("ids", ids);
+    userGames ? userGames.map((game) => ids.push(game.id)) : setToggle(false);
     const findID = ids.find((element) => element === data.id);
     findID ? setToggle(true) : setToggle(false);
-    //console.log(toggle)
   };
 
   const bannerImage = () => {
@@ -81,7 +74,6 @@ const Banner = ({ data }) => {
       });
     };
     images();
-    //console.log(backgroundList.length);
 
     return backgroundList;
   };
@@ -104,7 +96,6 @@ const Banner = ({ data }) => {
       });
     };
     banner_list();
-    //console.log(string);
     return string;
   };
 
@@ -151,7 +142,7 @@ const Banner = ({ data }) => {
           {!toggle ? (
             <button
               className="banner-button"
-              onClick={addToFavorite}
+              onClick={handleFavButton}
               rel="noopener noreferrer"
             >
               Add to Favorite
@@ -159,7 +150,7 @@ const Banner = ({ data }) => {
           ) : (
             <button
               className="banner-button"
-              onClick={addToFavorite}
+              onClick={handleFavButton}
               rel="noopener noreferrer"
             >
               Remove From Favorite
