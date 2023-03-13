@@ -36,13 +36,15 @@ export function StoreContextProvider(props) {
     setAccessTwitchToken(accessTwitchToken);
     // Set reserve token
     const user = localStorage.getItem(`user`);
-    await db.collection("users").doc(user).set(
-      {
-        reserveIgbdToken: accessTwitchToken,
-      },
-      { merge: true }
-    );
-    return accessTwitchToken;
+    if (user) {
+      await db.collection("users").doc(user).set(
+        {
+          reserveIgbdToken: accessTwitchToken,
+        },
+        { merge: true }
+      );
+      return accessTwitchToken;
+    } else return null;
   }
 
   async function loginHandler(user) {

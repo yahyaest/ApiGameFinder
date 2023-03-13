@@ -1,0 +1,15 @@
+version: '3'
+services:
+  game-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    container_name: game-app
+    stdin_open: true
+    volumes:
+       - .:/app
+    env_file:
+      - .env
