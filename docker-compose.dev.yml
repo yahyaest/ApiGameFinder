@@ -1,18 +1,15 @@
 version: '3'
 services:
   game-app:
-    container_name: game-app
     build:
       context: .
       dockerfile: Dockerfile
     restart: unless-stopped
-    stdin_open: true
-    environment:
-      NODE_ENV: production
     ports:
-      - "3002:3000"
+      - "3000:3000"
+    container_name: game-app
+    stdin_open: true
     volumes:
-      - ./src:/app/src
-      - ./public:/app/public
+       - .:/app
     env_file:
       - .env
