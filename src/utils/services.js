@@ -40,7 +40,9 @@ export async function gameData(token) {
       console.log("Error Code Status : ", errorCodeStatus);
       console.log("Error Code Message : ", error.response.data);
     }
-    window.location.replace("/enable-cors");
+    const environment = process.env.REACT_APP_ENV;
+    const domain = process.env.REACT_APP_DOMAIN 
+    environment === "PROD" ? window.location.replace(`${domain}/enable-cors`) : window.location.replace("/enable-cors");
   }
 }
 
@@ -72,7 +74,9 @@ export async function gameSearch(game, token) {
       console.log("Error Code Status : ", errorCodeStatus);
       console.log("Error Code Message : ", error.response.data);
     }
-    window.location.replace("/enable-cors");
+    const environment = process.env.REACT_APP_ENV;
+    const domain = process.env.REACT_APP_DOMAIN 
+    environment === "PROD" ? window.location.replace(`${domain}/enable-cors`) : window.location.replace("/enable-cors");
   }
 }
 
