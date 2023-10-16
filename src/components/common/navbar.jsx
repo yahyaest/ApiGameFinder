@@ -6,6 +6,8 @@ import { auth } from "../../utils/firebase";
 import StoreContext from "../../store/store-context";
 
 const Navbar = () => {
+  const environment = process.env.REACT_APP_ENV;
+  const domain = process.env.REACT_APP_DOMAIN 
   const storeCtx = useContext(StoreContext);
   const [show, handleShow] = useState(false);
   const user = localStorage.getItem(`user`);
@@ -67,7 +69,7 @@ const Navbar = () => {
       </div>
 
       <Link to="/">
-        <img className="navLogo" src="/images/E3_Logo.png" alt="E3-Logo" />
+        <img className="navLogo" src={environment === "PROD" ? `${domain}/images/E3_Logo.png` : "/images/E3_Logo.png"}  alt="E3-Logo" />
       </Link>
 
       <NavLink to={!user && "/login"}>
